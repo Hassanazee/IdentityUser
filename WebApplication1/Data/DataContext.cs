@@ -115,6 +115,24 @@ namespace WebApplication1.Data
                       .HasForeignKey(r => r.OrgId)
                       .IsRequired();
             });
+            modelBuilder.Entity<TimeTableEntry>()
+        .HasOne(t => t.Subject)
+        .WithMany()
+        .HasForeignKey(t => t.SubjectId)
+        .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TimeTableEntry>()
+                .HasOne(t => t.Teacher)
+                .WithMany()
+                .HasForeignKey(t => t.TeacherId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<TimeTableEntry>()
+                .HasOne(t => t.Room)
+                .WithMany()
+                .HasForeignKey(t => t.RoomId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             base.OnModelCreating(modelBuilder);
 

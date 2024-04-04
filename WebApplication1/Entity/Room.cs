@@ -12,6 +12,8 @@ namespace WebApplication1.Entity
         public int Capacity { get; set; }
        public Guid OrgId { get; set; }
        public OrganizationSch Organization { get; set; }
-       public Subject Subject { get; set; } 
+       public Subject Subject { get; set; }
+       public  IList<TimeTableEntry> TimeTableEntries { get; set; } = new List<TimeTableEntry>();
+
     }
 }

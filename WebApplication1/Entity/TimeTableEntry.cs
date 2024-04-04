@@ -12,5 +12,12 @@ namespace WebApplication1.Entity
         public DayOfWeek DayOfWeek { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+
+        public Guid TTId { get; set; }
+        public  TimeTable TimeTable { get; set; }
+        public Subject Subject { get; set; }
+        public Teacher Teacher { get; set;}
+        public Room Room { get; set; }
+
     }
 }

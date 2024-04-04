@@ -10,6 +10,7 @@ namespace WebApplication1.Entity
         public string TotalStudent { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public IList<Grade> Grade { get; set; } = new List<Grade>();
         public IList<Student> Students { get; set; } = new List<Student>();
         public IList<Subject> Subjects { get; set; } = new List<Subject>();
     }

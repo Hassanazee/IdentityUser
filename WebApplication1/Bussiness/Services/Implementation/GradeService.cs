@@ -25,30 +25,36 @@ namespace WebApplication1.Bussiness.Services.Implementation
             try
             {
                 var trans = await UnitOfWork.Context.Database.BeginTransactionAsync();
+                var year = await UnitOfWork.Context.Years.FirstOrDefaultAsync(x => x.Id == reqModel.Year.YearId) ?? throw new Exception("Year not found");
 
                 Grade grade = new Grade()
                 {
                     Id = new Guid(),
                     Section = reqModel.Section,
-                    Students = reqModel.Student.Select(s => new Student
-                    {
-                        Name = s.Name,
-                    }).ToList(),
-                    Subjects = reqModel.Subjects.Select(s=> new Subject
-                    {
-                        Id = s.Id,
-                        SubjectName = s.SubjectName,
-                        
-                    }).ToList(),
-                };
+                    GradeName = reqModel.GradeName,
+                    OrganizationId = reqModel.OrgId,
+                     Year = new Year()
+                     {
+                            Id = reqModel.Year.YearId,
+                            EnrollmentYear = reqModel.Year.EnrollmentYear,
+                            EndYear = reqModel.Year.EndYear,
+                            GradeName = reqModel.Year.GradeName
+                     }
+                        /*     Students = reqModel.Student.Select(s => new Student
+                             {
+                                 Name = s.Name,
+                             }).ToList(),
+                             Subjects = reqModel.Subjects.Select(s=> new Subject
+                             {
+                                 Id = s.Id,
+                                 SubjectName = s.SubjectName,
 
-
-              await Repository.Add( grade );
-              await UnitOfWork.SaveAsync();
-              await UnitOfWork.CommitTransactionAsync(trans);
-
-                return grade.Ok();
-
+                             }).ToList(),*/
+                    }; 
+                    await Repository.Add(grade);
+                    await UnitOfWork.SaveAsync();
+                    await UnitOfWork.CommitTransactionAsync(trans);  
+                return grade.Ok();  
             }
             catch (Exception ex)
             {
@@ -105,6 +111,7 @@ namespace WebApplication1.Bussiness.Services.Implementation
             try
             {
                 var gradeStudents = await UnitOfWork.Context.Grades
+                    .Include(x=> x.Organization).Include(x=> x.Year)
                     .Include(g => g.Students)
                     .Include(g => g.Subjects)
                     .ToListAsync();
@@ -117,15 +124,39 @@ namespace WebApplication1.Bussiness.Services.Implementation
                     {
                         GradeId = grade.Id,
                         GradeName = grade.GradeName,
+                      
+                        OrganizationRes = new OrganizationRes()
+                        {
+                            StartTime = grade.Organization.StartTime,
+                            EndTime = grade.Organization.EndTime,
+                            Id = grade.Organization.Id,
+                            Location = grade.Organization.Location,
+                            TotalStaff = grade.Organization.TotalStaff,
+                            TotalStudent = grade.Organization.TotalStudent,
+                            Organization = grade.Organization.Organization,
+                            Students = grade.Organization.Students.Select(s => new StudentRes
+                            {
+                                GradeId = s.Id,
+                                OrgId = s.OrgId,
+                                RoomId = s.RoomId,
+                                TeacherId = s.teacherId,
+                            }).ToList(),
+                        },
                         Student = grade.Students.Select(s => new StudentRes
                         {
                             Id = s.Id,
-                            Name = s.Name
+                            Name = s.Name,
+                            GradeId = s.Id,
+                            Grade = s.CurrentGrade,
+                            OrgId = s.OrgId,
+                            RoomId = s.RoomId,
+                            TeacherId = s.teacherId,
                         }).ToList(),
                         Subjects = grade.Subjects.Select(sub => new SubjectRes
                         {
                             Id= sub.Id,
-                            SubjectName = sub.SubjectName
+                            SubjectName = sub.SubjectName,
+                            GradeId = sub.GradeId,
                         }).ToList()
                     };
 

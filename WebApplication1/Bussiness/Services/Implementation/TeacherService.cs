@@ -27,12 +27,12 @@ namespace WebApplication1.Bussiness.Services.Implementation
                     Name = reqModel.Name,
                     Salary = reqModel.Salary,
                     SubjectTitle = reqModel.SubjectTitle,
-                    OrgId = reqModel.OrgId,
-                    Student = reqModel.Students.Select(s => new Student
+                    OrganizationId = reqModel.OrgId,
+                  /*  Student = reqModel.Students.Select(s => new Student
                     {
                         //Id = s.Id,
                         Name = s.Name
-                    }).ToList()
+                    }).ToList()*/
                 };
 
                 await Repository.Add(teacher);
@@ -77,7 +77,7 @@ namespace WebApplication1.Bussiness.Services.Implementation
                         Name = teacher.Name,
                         Salary = teacher.Salary,
                         SubjectTitle = teacher.SubjectTitle,
-                        OrgId = teacher.OrgId,
+                        OrgId = teacher.OrganizationId,
                         Students = teacher.Student.Select(s => new StudentRes
                         {
                             Id = s.Id,
@@ -116,7 +116,7 @@ namespace WebApplication1.Bussiness.Services.Implementation
                     Name = teacher.Name,
                     Salary = teacher.Salary,
                     SubjectTitle = teacher.SubjectTitle,
-                    OrgId = teacher.OrgId,
+                    OrgId = teacher.OrganizationId,
                     Students = teacher.Student.Select(s => new StudentRes
                     {
                         Id = s.Id,

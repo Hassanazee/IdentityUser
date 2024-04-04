@@ -12,8 +12,8 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240320102650_new")]
-    partial class @new
+    [Migration("20240403101741_newInit")]
+    partial class newInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -92,10 +92,7 @@ namespace WebApplication1.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("OrgId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("OrganizationId")
+                    b.Property<Guid?>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Section")
@@ -401,9 +398,6 @@ namespace WebApplication1.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("OrgId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("OrganizationId")
                         .HasColumnType("uniqueidentifier");
 
@@ -497,19 +491,45 @@ namespace WebApplication1.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("RoomId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("SubjectId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("SubjectId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TTId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TeacherId1")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("TimetableId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("RoomId1");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("SubjectId1");
+
+                    b.HasIndex("TeacherId");
+
+                    b.HasIndex("TeacherId1");
+
+                    b.HasIndex("TimetableId");
 
                     b.ToTable("TimeTableEntries");
                 });
@@ -565,10 +585,8 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Entity.Grade", b =>
                 {
                     b.HasOne("WebApplication1.Entity.OrganizationSch", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Grade")
+                        .HasForeignKey("OrganizationId");
 
                     b.HasOne("WebApplication1.Entity.Year", "Year")
                         .WithMany("Grade")
@@ -689,6 +707,53 @@ namespace WebApplication1.Migrations
                     b.Navigation("Organization");
                 });
 
+            modelBuilder.Entity("WebApplication1.Entity.TimeTableEntry", b =>
+                {
+                    b.HasOne("WebApplication1.Entity.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Entity.Room", null)
+                        .WithMany("TimeTableEntries")
+                        .HasForeignKey("RoomId1");
+
+                    b.HasOne("WebApplication1.Entity.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Entity.Subject", null)
+                        .WithMany("TimeTableEntries")
+                        .HasForeignKey("SubjectId1");
+
+                    b.HasOne("WebApplication1.Entity.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("WebApplication1.Entity.Teacher", null)
+                        .WithMany("TimeTableEntries")
+                        .HasForeignKey("TeacherId1");
+
+                    b.HasOne("WebApplication1.Entity.TimeTable", "TimeTable")
+                        .WithMany("TimeTableEntries")
+                        .HasForeignKey("TimetableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+
+                    b.Navigation("TimeTable");
+                });
+
             modelBuilder.Entity("WebApplication1.Entity.Grade", b =>
                 {
                     b.Navigation("Students");
@@ -698,6 +763,8 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Entity.OrganizationSch", b =>
                 {
+                    b.Navigation("Grade");
+
                     b.Navigation("Students");
 
                     b.Navigation("Subjects");
@@ -707,6 +774,8 @@ namespace WebApplication1.Migrations
                 {
                     b.Navigation("Subject")
                         .IsRequired();
+
+                    b.Navigation("TimeTableEntries");
                 });
 
             modelBuilder.Entity("WebApplication1.Entity.Student", b =>
@@ -719,6 +788,8 @@ namespace WebApplication1.Migrations
                     b.Navigation("Contents");
 
                     b.Navigation("SubjectStudents");
+
+                    b.Navigation("TimeTableEntries");
                 });
 
             modelBuilder.Entity("WebApplication1.Entity.SubjectFee", b =>
@@ -730,6 +801,13 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Entity.Teacher", b =>
                 {
                     b.Navigation("Student");
+
+                    b.Navigation("TimeTableEntries");
+                });
+
+            modelBuilder.Entity("WebApplication1.Entity.TimeTable", b =>
+                {
+                    b.Navigation("TimeTableEntries");
                 });
 
             modelBuilder.Entity("WebApplication1.Entity.Year", b =>

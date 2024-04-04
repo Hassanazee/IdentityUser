@@ -6,7 +6,7 @@
         public string Salary { get; set; }
         public string SubjectTitle { get; set; }
         public Guid OrgId { get; set; }
-        public IList<StudentReq> Students { get; set; } = new List<StudentReq>();
+     //   public IList<StudentReq> Students { get; set; } = new List<StudentReq>();
 
     }
 }

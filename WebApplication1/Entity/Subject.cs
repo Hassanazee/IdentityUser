@@ -18,5 +18,8 @@ namespace WebApplication1.Entity
         public Guid RoomId { get; set; }
         public Room Room { get; set; }
 
+
+        public IList<TimeTableEntry> TimeTableEntries { get; set; } = new List<TimeTableEntry>();
+
     }
 }

@@ -9,6 +9,6 @@ namespace WebApplication1.Bussiness.Dtos.Request
         public Guid OrgId { get; set; }
         public Guid TeacherId { get; set; }
         public Guid RoomId { get; set; }
-        public IList<SubjectStudent>? SubjectStudents { get; set; } = new List<SubjectStudent>();
+     //   public IList<SubjectStudent>? SubjectStudents { get; set; } = new List<SubjectStudent>();
     }
 }
